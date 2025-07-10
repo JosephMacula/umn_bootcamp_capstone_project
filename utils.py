@@ -1,3 +1,13 @@
+import seaborn as sns
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.dates import (YEARLY, DateFormatter,
+                              rrulewrapper, RRuleLocator, drange)
+import datetime   # package that helps manipulate dates
+import matplotlib.dates as mdates
+import calendar
+
 def plot_df(df, x, y, title="", xlabel='Date', ylabel='Value'):
     plt.figure(figsize=(16,5))
     plt.plot(x, y, color='tab:red')
@@ -132,3 +142,37 @@ def boxPlot(df, pollutant):
     axes[0].set_title('Year-wise Box Plot\n(The Trend)', fontsize=18);
     axes[1].set_title('Month-wise Box Plot\n(The Seasonality)', fontsize=18)
     plt.show()
+
+#Drawing pairplot and correlation matrix : Use the data from aqicn.org data.
+
+def air_pairplot(df):
+    df_numeric = df.drop('date',axis =1)
+    sns.pairplot(df_numeric)
+    
+def air_cormatrix(df):
+    df_numeric = df.drop('date',axis =1)
+    corr_matrix = df_numeric.corr()
+    plt.figure(figsize =(8,6))
+    sns.heatmap(corr_matrix, annot =True, fmt ='.2f', cmap ='coolwarm', square =True, cbar_kws ={'shrink':.75})
+    plt.show()
+
+
+#Computing ratios
+def df_ratio(a):
+    gases = ['PM25','PM10','O3','NO2','SO2','CO']
+    df_ratio_f = a.copy()
+    for gas in gases:
+        if gas in a.columns:
+            # To exclude 0
+            df_ratio_f[gas] = df_ratio_f[gas].replace(0, 1e-6)
+            # Computing change of log
+            df_ratio_f[f'{gas}_ratio'] = np.log(df_ratio_f[gas]) - np.log(df_ratio_f[gas].shift(1))
+    
+    # Eliminating original columns
+    df_ratio_f.drop(columns=gases, inplace=True)
+    
+    # Elimination of NaN and inf value
+    df_ratio_f.replace([np.inf, -np.inf], np.nan, inplace=True)  # inf -> NaN
+    df_ratio_f.dropna(inplace=True)                             # Eliminating NaN
+    
+    return df_ratio_f
