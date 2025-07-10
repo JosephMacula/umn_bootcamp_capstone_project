@@ -1,1 +1,1 @@
-
+The csv files in this directory are cleaned-up versions of the csv files in the parent directory nasa_data. For details on what exactly has been done to the original csv files to produce the csv file in this directory, see the .ipynb file 'cleaning_code' 
