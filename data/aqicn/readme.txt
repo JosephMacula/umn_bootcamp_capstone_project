@@ -10,4 +10,5 @@ Quanzhou: Shoes, agriculture export
 Shanghai: port city
 Shenzhen: tech capital
 Shuozhou: Coal Capital of N.China
+Tangshan: Most polluted city in China
 Wuhan: COVID, steel and heavy industry
