@@ -60,12 +60,6 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box):
 	    raise ValueError("Measurement must be one of the following: 'SO2', 'NO2', or 'Particulate Matter'")
 	    print('sorry, we''re working on adding more functionality!')
 
-	# start_time = 'starttime=2014-01-01T00:00:00Z'
-	# end_time = 'endtime=2025-07-01T23:59:59Z'
-	# boundary_box = 'bbox=110,41,111,42'
-	# data_source = 'data=OMSO2e_003_ColumnAmountSO2'
-	# data_type = 'variableFacets=dataFieldMeasurement%3ASO2%3B'
-
 	#Assembling the URL that will get Giovanni loaded with all the user-specified search terms
 	new_url = 'https://giovanni.gsfc.nasa.gov/giovanni/#' + '&' + select_plot + '&' + start + '&' + end + '&' + bdy_box + '&' + data_source + '&' + data_type
 
