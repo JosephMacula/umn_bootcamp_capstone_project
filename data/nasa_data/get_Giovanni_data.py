@@ -5,12 +5,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC 
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.firefox.options import Options
 import time
 import warnings
 import glob
 import os
 
-def get_Giovanni_data(start_time, end_time, measurement, boundary_box, download_directory, file_name = None):
+def get_Giovanni_data(my_username, my_password, start_time, end_time, measurement, boundary_box, download_directory, file_name = None):
 	warnings.warn("Remember: boundary box elements should be in the following order: west longitude, south latitude, east longitude, north latitude. If this convention is not followed, unexpected behavior or errors may occur.")
 	if type(start_time) != str or type(end_time) != str:
 		raise ValueError("start time and end time must be of type 'str' and in the format 'YEAR-MONTH-DAY': e.g., '2000-01-01'")
@@ -19,8 +20,13 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box, download_
 
 	#setting up the web driver and opening the Giovanni webpage
 	driver_options = Options()
+	driver_options.set_preference("browser.download.folderList", 2)
+	driver_options.set_preference("browser.download.manager.showWhenStarting", False)
 	driver_options.set_preference('browser.download.dir', download_directory)
-	driver = webdriver.Firefox()
+	driver_options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/x-gzip")
+
+
+	driver = webdriver.Firefox(options = driver_options)
 	driver.get('https://giovanni.gsfc.nasa.gov/giovanni/')
 
 	#ensure that the webpage loads first, then click the login button to get to the user login page.
@@ -34,8 +40,8 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box, download_
 
 	username = driver.find_element(By.XPATH, "//input[@id = 'username']")
 	password = driver.find_element(By.XPATH, "//input[@id = 'password']")
-	username.send_keys("joseph.macula@colorado.edu")
-	password.send_keys("Cargillproject1!")
+	username.send_keys(my_username)
+	password.send_keys(my_password)
 	gio_login = driver.find_element(By.XPATH, "//input[@value = 'Log in']")
 	gio_login.click()
 
@@ -63,6 +69,7 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box, download_
 	    raise ValueError("Measurement must be one of the following: 'SO2', 'NO2', or 'Particulate Matter'")
 	    print('sorry, we''re working on adding more functionality!')
 
+
 	#Assembling the URL that will get Giovanni loaded with all the user-specified search terms
 	new_url = 'https://giovanni.gsfc.nasa.gov/giovanni/#' + '&' + select_plot + '&' + start + '&' + end + '&' + bdy_box + '&' + data_source + '&' + data_type
 
@@ -71,7 +78,7 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box, download_
 	driver.refresh()
 
 
-    	#This is an almost-certainly highly imperfect solution to an ElementClickIntercepted exception. The following two WebDriverWait
+    #This is an almost-certainly highly imperfect solution to an ElementClickIntercepted exception. The following two WebDriverWait
 	#are the solution I found to ensure that the 'Plot Data' button gets clicked. 
 	
 	WebDriverWait(driver, 100).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
@@ -92,9 +99,12 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box, download_
 	csv_download = driver.find_element(By.XPATH, "//*[@title = 'Download CSV']")
 	csv_download.click()
 
+	time.sleep(5)
+
 	#renaming the downloaded file, provided that file_name is not the default 'None' value
 	if file_name != None:
-		downloaded_csv_files = glob.glob(download_directory+'/.csv')
+		downloaded_csv_files = glob.glob(download_directory+'/*.csv')
 		most_recent_csv = max(downloaded_csv_files, key=os.path.getctime)
 		os.rename(most_recent_csv, download_directory+'/'+file_name+'.csv')
 	
+
