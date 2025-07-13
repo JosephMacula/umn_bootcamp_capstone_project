@@ -7,9 +7,10 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import warnings
+import glob
+import os
 
-
-def get_Giovanni_data(start_time, end_time, measurement, boundary_box):
+def get_Giovanni_data(start_time, end_time, measurement, boundary_box, download_directory, file_name = None):
 	warnings.warn("Remember: boundary box elements should be in the following order: west longitude, south latitude, east longitude, north latitude. If this convention is not followed, unexpected behavior or errors may occur.")
 	if type(start_time) != str or type(end_time) != str:
 		raise ValueError("start time and end time must be of type 'str' and in the format 'YEAR-MONTH-DAY': e.g., '2000-01-01'")
@@ -17,6 +18,8 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box):
 		raise ValueError("boundary_box must be of type 'list'")
 
 	#setting up the web driver and opening the Giovanni webpage
+	driver_options = Options()
+	driver_options.set_preference('browser.download.dir', download_directory)
 	driver = webdriver.Firefox()
 	driver.get('https://giovanni.gsfc.nasa.gov/giovanni/')
 
@@ -68,7 +71,7 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box):
 	driver.refresh()
 
 
-    #This is an almost-certainly highly imperfect solution to an ElementClickIntercepted exception. The following two WebDriverWait
+    	#This is an almost-certainly highly imperfect solution to an ElementClickIntercepted exception. The following two WebDriverWait
 	#are the solution I found to ensure that the 'Plot Data' button gets clicked. 
 	
 	WebDriverWait(driver, 100).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
@@ -89,3 +92,9 @@ def get_Giovanni_data(start_time, end_time, measurement, boundary_box):
 	csv_download = driver.find_element(By.XPATH, "//*[@title = 'Download CSV']")
 	csv_download.click()
 
+	#renaming the downloaded file, provided that file_name is not the default 'None' value
+	if file_name != None:
+		downloaded_csv_files = glob.glob(download_directory+'/.csv')
+		most_recent_csv = max(downloaded_csv_files, key=os.path.getctime)
+		os.rename(most_recent_csv, download_directory+'/'+file_name+'.csv')
+	
