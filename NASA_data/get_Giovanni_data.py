@@ -31,7 +31,7 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 
 	#ensure that the webpage loads first, then click the login button to get to the user login page.
 	
-	WebDriverWait(driver, 100).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
+	WebDriverWait(driver, 1000).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
 	login_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@id = 'loginButton']")))
 	login_button.click()
 
@@ -48,10 +48,7 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	#Giovanni takes a while to reload, so we need an explicit wait here to be sure we don't try to click before the loading
 	#animation is complete. 
 	
-	WebDriverWait(driver, 100).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
-
-
-	#Right now this is hardedcoded. Need to change this. 
+	WebDriverWait(driver, 200).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
 	
 	select_plot = 'service=ArAvTs'
 	start = 'starttime='+ start_time 
@@ -82,9 +79,9 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
     	#This is an almost-certainly highly imperfect solution to an ElementClickIntercepted exception. The following two WebDriverWait
 	#are the solution I found to ensure that the 'Plot Data' button gets clicked. 
 	
-	WebDriverWait(driver, 100).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
-	plot_data = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.ID, "sessionDataSelToolbarplotBTN-button")))
-	WebDriverWait(driver, 100).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
+	WebDriverWait(driver, 1000).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
+	plot_data = WebDriverWait(driver, 100).until(EC.element_to_be_clickable((By.ID, "sessionDataSelToolbarplotBTN-button")))
+	WebDriverWait(driver, 1000).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
 	plot_data.click()
 
 	#The timeout parameter is really big because Giovanni can be really slow. Could try and tune this number later if one
@@ -94,8 +91,8 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 
 	#Click the download button and then click the CSV button from the dropdown menu that appears. If your browser is 
 	#configured to automatically download files into a specified directory, that's where the CSV file will land. 
-	
-	download_button = driver.find_element(By.XPATH, "//button[contains(@id,'downloadToggleButton')]")
+
+	download_button = WebDriverWait(driver, 100, ignored_exceptions = (StaleElementReferenceException)).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@id,'downloadToggleButton')]")))
 	ActionChains(driver).move_to_element(download_button).click().perform()
 	csv_download = driver.find_element(By.XPATH, "//*[@title = 'Download CSV']")
 	csv_download.click()
@@ -103,7 +100,7 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	time.sleep(5)
 
 	#renaming the downloaded file, provided that file_name is not the default 'None' value
-	if download_directory != None and file_name != None:
+	if file_name != None:
 		downloaded_csv_files = glob.glob(download_directory+'/*.csv')
 		most_recent_csv = max(downloaded_csv_files, key=os.path.getctime)
 		os.rename(most_recent_csv, download_directory+'/'+file_name+'.csv')
