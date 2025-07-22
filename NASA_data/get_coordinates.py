@@ -17,20 +17,3 @@ def get_city_bounds(city_name, api_key, region):
         
     return {"city": result['address_components'][0]['short_name'],
             "bounding_box": (bounds["southwest"]['lng'],bounds["southwest"]['lat'], bounds["northeast"]['lng'], bounds["northeast"]['lat'])}
-
-
-
-
-
-
-api_key = "AIzaSyApFtPIpxJQUeFs59xdFb-HbOScsvtVBrw" #this is my google maps API key :D
-city_list = ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Chengdu', 'Chongqing', 'Wuhan', 'Kunming', 'Panzhihua',
-            'Shuozhou', 'Baotou', 'Ganzhou', 'Quanzhou']
-
-
-#creates a dictionary object whose keys are the cities from city_list and the values are the boundary boxes for the 
-#corresponding city
-
-city_bounds = {}
-for i in range(0, len(city_list)):
-    city_bounds[city_list[i]] = get_city_bounds(city_list[i], api_key, 'cn').get('bounding_box')
