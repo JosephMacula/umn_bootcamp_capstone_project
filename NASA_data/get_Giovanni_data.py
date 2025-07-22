@@ -24,8 +24,6 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	driver_options.set_preference("browser.download.manager.showWhenStarting", False)
 	driver_options.set_preference('browser.download.dir', download_directory)
 	driver_options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/x-gzip")
-
-
 	driver = webdriver.Firefox(options = driver_options)
 	driver.get('https://giovanni.gsfc.nasa.gov/giovanni/')
 
@@ -55,18 +53,15 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	end = 'endtime='+ end_time 
 	bdy_box = 'bbox='+str(boundary_box[0])+','+str(boundary_box[1])+','+str(boundary_box[2])+','+str(boundary_box[3])
 	data_type = 'variableFacets=dataFieldMeasurement%3A'+measurement+'%3B'
-
 	if measurement == 'SO2':
 	    data_source = 'data=M2T1NXAER_5_12_4_SO2SMASS'
 	elif measurement == 'NO2':
 	    data_source = 'data=OMNO2d_003_ColumnAmountNO2CloudScreened'
 	elif measurement == 'Particulate Matter':
 	    data_source = 'data=MERRA2_CNN_HAQAST_PM25_1_MERRA2_CNN_Surface_PM25'
-
 	else: 
 	    raise ValueError("Measurement must be one of the following: 'SO2', 'NO2', or 'Particulate Matter'")
 	    print('sorry, we''re working on adding more functionality!')
-
 
 	#Assembling the URL that will get Giovanni loaded with all the user-specified search terms
 	new_url = 'https://giovanni.gsfc.nasa.gov/giovanni/#' + '&' + select_plot + '&' + start + '&' + end + '&' + bdy_box + '&' + data_source + '&' + data_type
@@ -74,7 +69,6 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	#Refreshing the page with this new URL
 	driver.get(new_url)
 	driver.refresh()
-
 
     	#This is an almost-certainly highly imperfect solution to an ElementClickIntercepted exception. The following two WebDriverWait
 	#are the solution I found to ensure that the 'Plot Data' button gets clicked. 
