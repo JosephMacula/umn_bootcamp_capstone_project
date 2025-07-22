@@ -60,7 +60,7 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	data_type = 'variableFacets=dataFieldMeasurement%3A'+measurement+'%3B'
 
 	if measurement == 'SO2':
-	    data_source = 'data=OMSO2e_003_ColumnAmountSO2'
+	    data_source = 'data=M2T1NXAER_5_12_4_SO2SMASS'
 	elif measurement == 'NO2':
 	    data_source = 'data=OMNO2d_003_ColumnAmountNO2CloudScreened'
 	elif measurement == 'Particulate Matter':
