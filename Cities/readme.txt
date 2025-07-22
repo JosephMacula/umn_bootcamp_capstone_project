@@ -9,7 +9,7 @@ kmg_df <- Kunming: Tourism and Floriculture
 pzh_df <- Panzhihua: Steel, Mining, Metallurgy, Strategic Metals
 qzu_df <- Quanzhou: Shoes, agriculture export
 shi_df <- Shanghai: port city
-szn_df <-Shenzhen: tech capital
+szn_df <- Shenzhen: tech capital
 szh_df <- Shuozhou: Coal Capital of N.China
 tsh_df <- Tangshan: Most polluted city in China
 whn_df <- Wuhan: COVID, steel and heavy industry
