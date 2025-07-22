@@ -11,7 +11,7 @@ import warnings
 import glob
 import os
 
-def get_Giovanni_data(my_username, my_password, start_time, end_time, measurement, boundary_box, download_directory, file_name = None):
+def get_Giovanni_data(my_username, my_password, start_time, end_time, measurement, boundary_box, download_directory = None, file_name = None):
 	warnings.warn("Remember: boundary box elements should be in the following order: west longitude, south latitude, east longitude, north latitude. If this convention is not followed, unexpected behavior or errors may occur.")
 	if type(start_time) != str or type(end_time) != str:
 		raise ValueError("start time and end time must be of type 'str' and in the format 'YEAR-MONTH-DAY': e.g., '2000-01-01'")
@@ -103,7 +103,7 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	time.sleep(5)
 
 	#renaming the downloaded file, provided that file_name is not the default 'None' value
-	if file_name != None:
+	if download_directory != None and file_name != None:
 		downloaded_csv_files = glob.glob(download_directory+'/*.csv')
 		most_recent_csv = max(downloaded_csv_files, key=os.path.getctime)
 		os.rename(most_recent_csv, download_directory+'/'+file_name+'.csv')
