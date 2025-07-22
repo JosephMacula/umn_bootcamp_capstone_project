@@ -64,7 +64,8 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	elif measurement == 'NO2':
 	    data_source = 'data=OMNO2d_003_ColumnAmountNO2CloudScreened'
 	elif measurement == 'Particulate Matter':
-	    data_source = 'data=M2TMNXAER_5_12_4_TOTCMASS25'
+	    data_source = 'data=MERRA2_CNN_HAQAST_PM25_1_MERRA2_CNN_Surface_PM25'
+
 	else: 
 	    raise ValueError("Measurement must be one of the following: 'SO2', 'NO2', or 'Particulate Matter'")
 	    print('sorry, we''re working on adding more functionality!')
@@ -78,7 +79,7 @@ def get_Giovanni_data(my_username, my_password, start_time, end_time, measuremen
 	driver.refresh()
 
 
-    #This is an almost-certainly highly imperfect solution to an ElementClickIntercepted exception. The following two WebDriverWait
+    	#This is an almost-certainly highly imperfect solution to an ElementClickIntercepted exception. The following two WebDriverWait
 	#are the solution I found to ensure that the 'Plot Data' button gets clicked. 
 	
 	WebDriverWait(driver, 100).until(EC.invisibility_of_element_located((By.ID,  "progressModal")))
