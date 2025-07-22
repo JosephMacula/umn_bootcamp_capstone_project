@@ -8,7 +8,7 @@ Some words of warning:
 
 **Implementation Details**
 
-To use the get_Giovanni_data function in th get_Giovanni_data.py file, you need to be aware of what the function arguments should be. 
+*For the get_Giovanni_data function:*
 
 1. my_username: this needs to be your Earthdata username. Enter it as a string.
 2. my_password: this needss to be your Earthdata password. Enter is as a string.
@@ -20,4 +20,12 @@ To use the get_Giovanni_data function in th get_Giovanni_data.py file, you need 
 6. download_directory: this should be the directory where you want your files to be downloaded into. This directory needs to exist and the path should be an 
                       absolute path, entered as a string. For example, '/Users/josephmacula/the_rest_of_the_path'
 7. file_name: you really should set this to something! If not, the downloaded file will have the default name, which is a string of gibberish. 
-              The name can be whatever string you want, but it needs to be a string. 
+              The name can be whatever string you want, but it needs to be a string.
+
+*for the get_city_bounds function:*
+
+1. city_name: enter the name of the city as a string. I assume that Google assumes the American English name for the city of interest (e.g., if you want data on Cologne, Germany, enter 'Cologne', not 'Köln')
+
+2. api_key: this should be your API key for GoogleMaps' geocode API
+
+3. region: this should be the two-letter ISO code for the city's country (e.g., if city_name is 'Cologne', region should be 'DE')
